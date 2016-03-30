@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class Game extends Canvas implements KeyListener {
@@ -43,16 +42,16 @@ public class Game extends Canvas implements KeyListener {
     /**
      * Create the game using the width and the height specified
      */
-    public Game(Dimension dim) {
+    public Game(Dimension dim, int lvel) {
         buffer = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
 
         this.setIgnoreRepaint(true); // Ignore repainting as we are doing all
         // the drawing stuff
-        ball = new Ball(dim.width, dim.height, 185, dim.height - 60, 10,20);
+        ball = new Ball(dim.width, dim.height, 185, dim.height - 60,5 , 20);
         bat = new Bat(139, dim.height - 30, dim.width, dim.height, 5);
         d = dim;
 
-        bricks = Brick.getBirckSet(1);
+        bricks = Brick.getBirckSet(lvel);
 
         try {
             background = ImageIO.read(new File("./img/bg.png"));
@@ -117,7 +116,7 @@ public class Game extends Canvas implements KeyListener {
         b.drawImage(bat.getPic(), bat.getX(), bat.getY(), this);
 
         for (Brick brick : bricks) {
-            b.drawImage(brick.getPic(), brick.getX(), brick.getY(),this);
+            b.drawImage(brick.getPic(), brick.getX(), brick.getY(), this);
         }
 
     }
@@ -132,22 +131,20 @@ public class Game extends Canvas implements KeyListener {
         Toolkit.getDefaultToolkit().sync();
         g.finalize();
     }
-    
-    public void drawGameOverScreen(){
+
+    public void drawGameOverScreen() {
         Graphics2D g = buffer.createGraphics();
         try {
             BufferedImage gOver = ImageIO.read(new File("./img/over.png"));
-            g.drawImage(gOver, 0,0,400,600, this);
+            g.drawImage(gOver, 0, 0, 400, 600, this);
             drawScreen();
         } catch (IOException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
@@ -176,6 +173,7 @@ public class Game extends Canvas implements KeyListener {
             hit = false;
             bat.setShot(hit);
         }
+        
     }
 
     public void detectCollition() {
